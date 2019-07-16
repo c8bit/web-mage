@@ -15,7 +15,7 @@ from setuptools import find_packages, setup, Command
 NAME = 'web_mage'
 DESCRIPTION = 'Small package that optimizes images for the web.'
 URL = 'https://github.com/c8bit/web-mage'
-EMAIL = 'test@example.com'
+EMAIL = 'caitlynannefinn@gmail.com'
 AUTHOR = 'Caitlyn Finn'
 REQUIRES_PYTHON = '>=3.6.0'
 VERSION = '0.1.0'
