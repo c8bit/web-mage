@@ -1,3 +1,4 @@
 Pillow
 twine
+wheel
 pytest

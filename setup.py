@@ -20,20 +20,11 @@ AUTHOR = 'Caitlyn Finn'
 REQUIRES_PYTHON = '>=3.6.0'
 VERSION = '0.1.0'
 
-# What packages are required for this module to be executed?
 REQUIRED = [
     'Pillow',
 ]
 
-# What packages are optional?
-EXTRAS = {
-    # 'fancy feature': ['django'],
-}
-
-# The rest you shouldn't have to touch too much :)
-# ------------------------------------------------
-# Except, perhaps the License and Trove Classifiers!
-# If you do change the License, remember to change the Trove Classifier for that!
+EXTRAS = {}
 
 here = os.path.abspath(os.path.dirname(__file__))
 
@@ -106,7 +97,6 @@ class UploadCommand(Command):
         sys.exit()
 
 
-# Where the magic happens:
 setup(
     name=NAME,
     version=about['__version__'],
@@ -118,25 +108,21 @@ setup(
     python_requires=REQUIRES_PYTHON,
     url=URL,
     packages=find_packages(exclude=["tests", "*.tests", "*.tests.*", "tests.*"]),
-    # If your package is a single module, use this instead of 'packages':
-    # py_modules=['mypackage'],
-
-    # entry_points={
-    #     'console_scripts': ['mycli=mymodule:cli'],
-    # },
     install_requires=REQUIRED,
     extras_require=EXTRAS,
     include_package_data=True,
     license='MIT',
     classifiers=[
-        # Trove classifiers
-        # Full list: https://pypi.python.org/pypi?%3Aaction=list_classifiers
         'License :: OSI Approved :: MIT License',
+        'Development Status :: 3 - Alpha',
+        'Intended Audience :: Developers',
+        'Intended Audience :: Other Audience',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: Implementation :: CPython',
-        'Programming Language :: Python :: Implementation :: PyPy'
+        'Programming Language :: Python :: Implementation :: PyPy',
+        'Topic :: Multimedia :: Graphics :: Graphics Conversion'
     ],
     # $ setup.py publish support.
     cmdclass={
