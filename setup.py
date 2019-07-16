@@ -22,7 +22,7 @@ VERSION = '0.1.0'
 
 # What packages are required for this module to be executed?
 REQUIRED = [
-    # 'requests', 'maya', 'records',
+    'Pillow',
 ]
 
 # What packages are optional?
@@ -72,12 +72,26 @@ class UploadCommand(Command):
     def finalize_options(self):
         pass
 
+    def tests_passed(self):
+        """Returns boolean result of running automated tests."""
+        result = False
+        if os.system('make test') == 0:
+            result = True
+
+        return result
+
+
     def run(self):
         try:
             self.status('Removing previous builds…')
             rmtree(os.path.join(here, 'dist'))
         except OSError:
             pass
+
+        self.status('Making sure tests pass before continuing build process…')
+        if not self.tests_passed():
+            self.status('One or more tests failed! Fix the errors before package can be distributed. Exiting.')
+            sys.exit()
 
         self.status('Building Source and Wheel (universal) distribution…')
         os.system('{0} setup.py sdist bdist_wheel --universal'.format(sys.executable))
