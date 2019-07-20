@@ -9,11 +9,13 @@ class ImageFormat(object):
     """
     def __init__(self, max_width=None,
                        max_height=None,
+                       max_dimension=None,
                        max_size_bytes=None,
                        min_quality=60,
                        tag="optimized"):
         self.max_width = max_width
         self.max_height = max_height
+        self.max_dimension = max_dimension
         self.max_size_bytes = max_size_bytes
         self.min_quality = min_quality
         self.tag = tag
@@ -25,6 +27,12 @@ class ImageFormat(object):
     def dimensions_for_image(self, image):
         (current_height, current_width) = image.size
         target_ratio = 1
+
+        if self.max_dimension is not None:
+            if self.max_dimension < current_height:
+                target_ratio = min(target_ratio, self.max_dimension / current_height)
+            if self.max_dimension < current_width:
+                target_ratio = min(target_ratio, self.max_dimension / current_width)
 
         if self.max_height is not None and self.max_height < current_height:
             target_ratio = min(target_ratio, self.max_height / current_height)
@@ -48,6 +56,9 @@ IMG_FORMAT_AVATAR_LARGE = ImageFormat(max_width=100, max_height=100, tag="avatar
 IMG_FORMAT_AVATAR_MEDIUM = ImageFormat(max_width=80, max_height=80, tag="avatar_md")
 IMG_FORMAT_AVATAR_SMALL = ImageFormat(max_width=60, max_height=60, tag="avatar_sm")
 
-IMG_FORMAT_CONTENT_LARGE = ImageFormat(max_width=1280, max_height=960, tag="content_lg")
-IMG_FORMAT_CONTENT_MEDIUM = ImageFormat(max_width=960, max_height=720, tag="content_md")
-IMG_FORMAT_CONTENT_SMALL = ImageFormat(max_width=720, max_height=540, tag="content_sm")
+#IMG_FORMAT_CONTENT_LARGE = ImageFormat(max_width=1280, max_height=960, tag="content_lg")
+#IMG_FORMAT_CONTENT_MEDIUM = ImageFormat(max_width=960, max_height=720, tag="content_md")
+#IMG_FORMAT_CONTENT_SMALL = ImageFormat(max_width=720, max_height=540, tag="content_sm")
+IMG_FORMAT_CONTENT_LARGE = ImageFormat(max_dimension=1280, tag="content_lg")
+IMG_FORMAT_CONTENT_MEDIUM = ImageFormat(max_dimension=960, tag="content_md")
+IMG_FORMAT_CONTENT_SMALL = ImageFormat(max_dimension=720, tag="content_sm")
