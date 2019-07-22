@@ -18,7 +18,7 @@ URL = 'https://github.com/c8bit/web-mage'
 EMAIL = 'caitlynannefinn@gmail.com'
 AUTHOR = 'Caitlyn Finn'
 REQUIRES_PYTHON = '>=3.6.0'
-VERSION = '0.1.0'
+VERSION = '0.1.1'
 
 REQUIRED = [
     'Pillow',
@@ -91,7 +91,7 @@ class UploadCommand(Command):
         os.system('twine upload dist/*')
 
         self.status('Pushing git tags…')
-        os.system('git tag v{0}'.format(about['__version__']))
+        os.system('git tag -a "v{0}" -m "v{0}"'.format(about['__version__']))
         os.system('git push --tags')
 
         sys.exit()
