@@ -25,7 +25,7 @@ class ImageFormat(object):
         return base_filename + "_" + self.tag + extension
 
     def dimensions_for_image(self, image):
-        (current_height, current_width) = image.size
+        (current_width, current_height) = image.size
         target_ratio = 1
 
         if self.max_dimension is not None:
@@ -40,7 +40,9 @@ class ImageFormat(object):
         if self.max_width is not None and self.max_width < current_width:
             target_ratio = min(target_ratio, self.max_width / current_width)
 
-        return ((floor(current_height * target_ratio), floor(current_width * target_ratio)), self.min_quality)
+        return ((floor(current_width * target_ratio),
+                floor(current_height * target_ratio)),
+                self.min_quality)
             
 
 FULL_WIDTH_27_OR_30_INCH = 2560

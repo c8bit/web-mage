@@ -39,6 +39,7 @@ def test_job(image_file):
     (base_filename, extension) = os.path.splitext(image_file)
     output_optimized_filename = base_filename + "_optimized" + extension
     output_minimized_filename = base_filename + "_minimized" + extension
+    output_maxdim_filename = base_filename + "_maxdim" + extension
     assert not os.path.exists(output_optimized_filename)
     assert not os.path.exists(output_minimized_filename)
 
@@ -47,20 +48,28 @@ def test_job(image_file):
                                        min_quality=60,
                                        tag="minimized")
     img_format_optimized = ImageFormat(min_quality=60, tag="optimized")
+    img_format_maxdim = ImageFormat(min_quality=60,
+                                    max_dimension=(org_height / 2),
+                                    tag="maxdim")
 
     # Run the job
     job = Job(source=image_file, dest=os.path.dirname(image_file), formats=[img_format_minimized,
-                                                                            img_format_optimized])
+                                                                            img_format_optimized,
+                                                                            img_format_maxdim])
     job.run()
 
     # Compare results
     optimized_filesize = os.path.getsize(output_optimized_filename)
     minimized_filesize = os.path.getsize(output_minimized_filename)
+    maxdim_filesize    = os.path.getsize(output_maxdim_filename)
     assert os.path.exists(output_optimized_filename)
     assert optimized_filesize < org_filesize
 
     assert os.path.exists(output_minimized_filename)
     assert minimized_filesize < org_filesize
+
+    assert os.path.exists(output_maxdim_filename)
+    assert maxdim_filesize < org_filesize
 
     # Since minimized file is scaled down, should be smaller than optimized file
     assert minimized_filesize < optimized_filesize
@@ -74,8 +83,16 @@ def test_job(image_file):
     # Minimized file
     with Image.open(output_minimized_filename) as img:
         width, height = img.size
-        assert width <= (org_width / 2)
-        assert height <= (org_height / 2)
+        assert ((org_width / 2) - 1) <= width <= (org_width / 2)
+        assert ((org_height / 2) - 1) <= height <= (org_height / 2)
     
+    # Dimension-constrained file
+    with Image.open(output_maxdim_filename) as img:
+        width, height = img.size
+        if org_width > org_height:
+            assert ((org_height / 2) - 1) <= width <= (org_height / 2)
+            assert height <= width
+        else:
+            assert ((org_height / 2) - 1) <= height <= (org_height / 2)
+            assert width <= height
 
-    

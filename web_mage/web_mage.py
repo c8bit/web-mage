@@ -59,8 +59,8 @@ class ImageSet(object):
 
         for image_format in self.target_formats:
             with PILImage.open(self.source_filename) as image:
-                ((height, width), quality) = image_format.dimensions_for_image(image)
-                image = image.resize((height, width), PILImage.ANTIALIAS)
+                ((width, height), quality) = image_format.dimensions_for_image(image)
+                image = image.resize((width, height), PILImage.ANTIALIAS)
 
                 new_filename = image_format.get_tagged_filename(self.source_filename)
 
