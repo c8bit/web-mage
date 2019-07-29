@@ -3,7 +3,8 @@ import argparse
 import errno
 import os
 
-from PIL import Image as PILImage
+import PIL.ExifTags
+import PIL.Image
 
 from .formats import ImageFormat, IMG_FORMAT_DEFAULT
 
@@ -48,6 +49,29 @@ class ImageSet(object):
         self.dest_dir = dest_dir
         self.target_formats = target_formats
 
+    @staticmethod
+    def transpositions_for_orientation(orientation_code):
+        transpositions = []
+        if orientation_code == 2:
+            transpositions = [PIL.Image.FLIP_LEFT_RIGHT]
+        elif orientation_code == 3:
+            transpositions = [PIL.Image.ROTATE_180]
+        elif orientation_code == 4:
+            transpositions = [PIL.Image.FLIP_LEFT_RIGHT,
+                              PIL.Image.ROTATE_180]
+        elif orientation_code == 5:
+            transpositions = [PIL.Image.FLIP_LEFT_RIGHT,
+                              PIL.Image.ROTATE_270]
+        elif orientation_code == 6:
+            transpositions = [PIL.Image.ROTATE_270]
+        elif orientation_code == 7:
+            transpositions = [PIL.Image.FLIP_LEFT_RIGHT,
+                              PIL.Image.ROTATE_90]
+        elif orientation_code == 8:
+            transpositions = [PIL.Image.ROTATE_90]
+
+        return transpositions
+
     def optimize(self):
         # Ensure destination directory exists
         if not os.path.exists(self.dest_dir):
@@ -58,9 +82,18 @@ class ImageSet(object):
                 raise
 
         for image_format in self.target_formats:
-            with PILImage.open(self.source_filename) as image:
+            with PIL.Image.open(self.source_filename) as image:
+                exif_data = {
+                    PIL.ExifTags.TAGS[k]: v
+                    for k, v in image._getexif().items()
+                    if k in PIL.ExifTags.TAGS
+                }
+
                 ((width, height), quality) = image_format.dimensions_for_image(image)
-                image = image.resize((width, height), PILImage.ANTIALIAS)
+                image = image.resize((width, height), PIL.Image.ANTIALIAS)
+
+                for transposition in ImageSet.transpositions_for_orientation(exif_data['Orientation']):
+                    image = image.transpose(transposition)
 
                 new_filename = image_format.get_tagged_filename(self.source_filename)
 
