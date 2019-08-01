@@ -10,6 +10,9 @@ in a Python module, or run simply as a command-line utility.
 
 This project is functional, but still in early development.
 
+
+Changelog can be found [here](https://github.com/c8bit/web-mage/wiki/Changelog).
+
 Installation
 ------------
 
