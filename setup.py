@@ -18,7 +18,7 @@ URL = 'https://github.com/c8bit/web-mage'
 EMAIL = 'caitlynannefinn@gmail.com'
 AUTHOR = 'Caitlyn Finn'
 REQUIRES_PYTHON = '>=3.6.0'
-VERSION = '0.1.1'
+VERSION = '0.2.0'
 
 REQUIRED = [
     'Pillow',
